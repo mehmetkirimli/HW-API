@@ -7,7 +7,7 @@ import java.security.*;
 import java.security.cert.*;
 
 public class HttpPostExample {
-
+/*
     public static void main(String[] args) {
         String url = "https://sandbox-reporting.rpdpymnt.com/api/v3/merchant/user/login";
         String email = "demo@financialhouse.io";
@@ -85,4 +85,6 @@ public class HttpPostExample {
             e.printStackTrace();
         }
     }
+
+ */
 }
