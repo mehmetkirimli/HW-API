@@ -1,7 +1,11 @@
 package org.api_resolver.bean.login;
 
+import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.ResponsePayload;
+import org.api_resolver.utils.JWTResolver;
+import org.api_resolver.utils.ResponseResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -12,12 +16,19 @@ import java.io.OutputStream;
 import java.net.URL;
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginPostBean extends ConnectionPayload
 {
+    private final ResponseResolver responseResolver;
+    private final JWTResolver jwtResolver;
     public String login()
     {
         super.disableSSLVerification();
-        return sendPostRequest(getUrl1(),getEmail(),getPassword());
+        String response = sendPostRequest(getUrl1(),getEmail(),getPassword());
+        super.setResponseToken(responseResolver.parseToken(response));
+        super.setMerchantId(3); // NOTE jwt.io web sitesinden token'ı parse edince anlaşılıyor bu durum . Ben kendim jwt çzöümleyince digital signing key hatası oluşuyor , imzalayıcınin anahtarı lazım bunun içim.
+
+        return "Token : " + super.getResponseToken() + " -- MerchantId : " + super.getMerchantId();
     }
     public String sendPostRequest(String urlString, String email, String password) {
         try {

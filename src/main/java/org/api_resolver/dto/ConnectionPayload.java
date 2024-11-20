@@ -2,7 +2,9 @@ package org.api_resolver.dto;
 
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
@@ -14,6 +16,7 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
 @Getter
+@Setter
 public class ConnectionPayload
 {
     @Value("${email}")
@@ -37,7 +40,10 @@ public class ConnectionPayload
     @Value("${url5-test}")
     private String url5;
 
-    //TODO apiKey burada olsa olur mu ?
+    private String responseToken = "";
+    private Integer merchantId = null;
+
+
     public void disableSSLVerification() {
         try {
 
