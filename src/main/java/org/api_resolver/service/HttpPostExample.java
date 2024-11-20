@@ -1,4 +1,4 @@
-package org.api_resolver.Service;
+package org.api_resolver.service;
 
 import java.io.*;
 import java.net.*;
