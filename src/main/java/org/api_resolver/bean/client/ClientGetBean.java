@@ -15,10 +15,11 @@ public class ClientGetBean extends ConnectionPayload
     public String getClient()
     {
         super.disableSSLVerification();
-        return null;
+        String response = sendPostRequest(getUrl5(),53,"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXJjaGFudFVzZXJJZCI6NTMsInJvbGUiOiJ1c2VyIiwibWVyY2hhbnRJZCI6Mywic3ViTWVyY2hhbnRJZHMiOlszLDc0LDkzLDExOTEsMTI5NSwxMTEsMTM3LDEzOCwxNDIsMTQ1LDE0NiwxNTMsMzM0LDE3NSwxODQsMjIwLDIyMSwyMjIsMjIzLDI5NCwzMjIsMzIzLDMyNywzMjksMzMwLDM0OSwzOTAsMzkxLDQ1NSw0NTYsNDc5LDQ4OCw1NjMsMTE0OSw1NzAsMTEzOCwxMTU2LDExNTcsMTE1OCwxMTc5LDEyOTMsMTI5NCwxMzA2LDEzMDcsMTMyNCwxMzMxLDEzMzgsMTMzOSwxMzQxLDEzNDYsMTM0NywxMzQ4LDEzNDksMTM1MywxMzgzLDEzODQsMTM4NV0sInRpbWVzdGFtcCI6MTczMjExNDM0OX0.n5hbvHeMyVz0Aw_7jfva4Y8Mcb7FGdBjJoeoXFeBLOM");
+        return response;
     }
 
-    public String sendPostRequest(String urlString, String email, String password, String transactionId, String authorizationToken) {
+    public String sendPostRequest(String urlString,int transactionId, String authorizationToken) {
         try {
             // URL oluşturuluyor
             URL url = new URL(urlString);
@@ -31,7 +32,7 @@ public class ClientGetBean extends ConnectionPayload
             connection.setRequestProperty("Authorization", "Bearer " + authorizationToken);
 
             // JSON veri
-            String jsonInputString = "{ \"email\": \"" + email + "\", \"password\": \"" + password + "\", \"transactionId\": \"" + transactionId + "\" }";
+            String jsonInputString = "{ \"transactionId\": \"" + transactionId + "\" }";
 
             // Bağlantıyı açıyoruz ve veri gönderiyoruz
             connection.setDoOutput(true);

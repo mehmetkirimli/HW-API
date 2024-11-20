@@ -25,5 +25,11 @@ public class ApiController
         return loginService.login();
     }
 
+    @GetMapping(value = "/getClient")
+    public String getClient()
+    {
+        return clientService.getClient();
+    }
+
 
 }

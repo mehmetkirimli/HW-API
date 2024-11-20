@@ -25,5 +25,10 @@ public class ServiceImpl implements LoginService, ClientService, TransactionQuer
         return loginPostBean.login();
     }
 
+    public String getClient()
+    {
+        return clientGetBean.getClient();
+    }
+
 
 }
