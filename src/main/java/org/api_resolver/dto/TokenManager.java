@@ -9,7 +9,6 @@ public class TokenManager
     {
         tokenDTO = new TokenDTO();
     }
-
     public static TokenManager getInstance()
     {
         if(instance==null)
@@ -18,7 +17,6 @@ public class TokenManager
         }
         return instance;
     }
-
     public TokenDTO getTokenDTO()
     {
         return tokenDTO;

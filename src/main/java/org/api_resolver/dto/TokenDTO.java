@@ -17,7 +17,6 @@ public class TokenDTO
         this.token=token;
         this.tokenExpiration=System.currentTimeMillis() + (10*60*1000);
     }
-
     public Boolean isTokenValid()
     {
         return System.currentTimeMillis()<tokenExpiration;
