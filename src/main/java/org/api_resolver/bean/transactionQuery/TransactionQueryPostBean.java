@@ -23,7 +23,11 @@ public class TransactionQueryPostBean extends ConnectionPayload
     public String transactionQuery()
     {
         String response = sendPostRequest(getUrl3());
-        return "BU ÇALIŞIRSA OLMUŞTUR :) ";
+        if (response!= null)
+        {
+            return response;
+        }
+        return "Application is not connect to API !";
     }
 
     public String sendPostRequest(String urlString) {
@@ -35,8 +39,9 @@ public class TransactionQueryPostBean extends ConnectionPayload
 
             // JSON body oluştur
             Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2024-11-01");
-            body.put("toDate", "2024-11-20");
+            body.put("fromDate", "2010-01-01");
+            body.put("toDate", "2015-12-12");
+            body.put("Authorization",tokenDTO.getToken());
             // Ek filtreler gerekiyorsa buraya ekleyin
             // body.put("status", "APPROVED");
 
@@ -48,9 +53,9 @@ public class TransactionQueryPostBean extends ConnectionPayload
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Authorization", "Bearer " + tokenDTO.getToken());
-            connection.setRequestProperty("apiKey", tokenDTO.getToken());
-            connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+            connection.setRequestProperty("Authorization", tokenDTO.getToken());
+            //connection.setRequestProperty("apiKey", "514861735");
+            //connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
 
             connection.setDoOutput(true);
 
