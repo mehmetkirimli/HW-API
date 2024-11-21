@@ -3,6 +3,7 @@ package org.api_resolver.bean.login;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.ResponsePayload;
+import org.api_resolver.dto.TokenDTO;
 import org.api_resolver.utils.JWTResolver;
 import org.api_resolver.utils.ResponseResolver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +20,26 @@ import java.net.URL;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginPostBean extends ConnectionPayload
 {
+    private final TokenDTO tokenDTO;
     private final ResponseResolver responseResolver;
     private final JWTResolver jwtResolver;
     public String login()
     {
         super.disableSSLVerification();
         String response = sendPostRequest(getUrl1(),getEmail(),getPassword());
-        super.setResponseToken(responseResolver.parseToken(response));
-        super.setMerchantId(3); // NOTE jwt.io web sitesinden token'ı parse edince anlaşılıyor bu durum . Ben kendim jwt çzöümleyince digital signing key hatası oluşuyor , imzalayıcınin anahtarı lazım bunun içim.
+        tokenDTO.setToken(responseResolver.parseToken(response));
 
-        return "Token : " + super.getResponseToken() + " -- MerchantId : " + super.getMerchantId();
+        return "-- Token : " + tokenDTO.getToken() + "\n -- MerchantId : 53";
     }
-    public String sendPostRequest(String urlString, String email, String password) {
+    public String sendPostRequest(String urlString, String email, String password)
+    {
         try {
-            // URL oluşturuluyor
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
 
-            // JSON veri
             String jsonInputString = "{ \"email\": \"" + email + "\", \"password\": \"" + password + "\" }";
 
             // Bağlantıyı açıyoruz ve veri gönderiyoruz

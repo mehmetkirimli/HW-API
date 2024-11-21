@@ -2,21 +2,12 @@ package org.api_resolver.dto;
 
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-
 import javax.net.ssl.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
 @Getter
-@Setter
 public class ConnectionPayload
 {
     @Value("${email}")
@@ -39,10 +30,6 @@ public class ConnectionPayload
 
     @Value("${url5-test}")
     private String url5;
-
-    private String responseToken = "";
-    private Integer merchantId = null;
-
 
     public void disableSSLVerification() {
         try {

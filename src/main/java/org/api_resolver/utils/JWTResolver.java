@@ -7,15 +7,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class JWTResolver {
 
-    public int extractMerchantId(String token)
+    public int extractMerchantId(String token) //TODO HS256'ya Göre Tekrar Düzenle
     {
-        // JWT'yi çözümle
         Claims claims = Jwts.parserBuilder()
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        // merchantId değerini al
+        //TODO merchantId değerini al
         return claims.get("merchantId", Integer.class);
     }
+
+    // NOTE jwt.io web sitesinden token'ı parse edince anlaşılıyor bu durum .
+    // Ben kendim jwt çzöümleyince digital signing key hatası oluşuyor , imzalayıcınin anahtarı lazım bunun içim.
 }
