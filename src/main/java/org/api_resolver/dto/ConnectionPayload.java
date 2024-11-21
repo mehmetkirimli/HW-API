@@ -30,36 +30,4 @@ public class ConnectionPayload
 
     @Value("${url5-test}")
     private String url5;
-
-    public void disableSSLVerification() {
-        try {
-
-            TrustManager[] trustAllCertificates = new TrustManager[]{
-                    new X509TrustManager() {
-                        // SSL sertifikalarını kontrol etmemek için,
-                        // Güvenlik sağlayıcılarını kaldırıyoruz
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCertificates, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            // Hostname doğrulamasını devre dışı bırakıyoruz (isteğe bağlı)
-            HostnameVerifier allHostsValid = (hostname, session) -> true;
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

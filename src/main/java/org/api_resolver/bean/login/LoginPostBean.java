@@ -22,10 +22,8 @@ public class LoginPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
     private final ResponseResolver responseResolver;
-    private final JWTResolver jwtResolver;
     public String login()
     {
-        super.disableSSLVerification();
         String response = sendPostRequest(getUrl1(),getEmail(),getPassword());
         tokenDTO.setToken(responseResolver.parseToken(response));
 
@@ -66,6 +64,7 @@ public class LoginPostBean extends ConnectionPayload
                 }
                 System.out.println("Response: " + response.toString());
             }
+            connection.disconnect(); // Bağlantıyı kapat
             return response.toString();
 
         } catch (IOException e) {
