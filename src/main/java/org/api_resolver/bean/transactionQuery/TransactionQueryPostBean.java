@@ -7,6 +7,7 @@ import org.api_resolver.dto.TokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -48,6 +49,9 @@ public class TransactionQueryPostBean extends ConnectionPayload
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Authorization", "Bearer " + tokenDTO.getToken());
+            connection.setRequestProperty("apiKey", tokenDTO.getToken());
+            connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+
             connection.setDoOutput(true);
 
             // JSON body gönder
