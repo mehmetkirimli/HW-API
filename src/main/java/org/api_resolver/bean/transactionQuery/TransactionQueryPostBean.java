@@ -22,14 +22,13 @@ public class TransactionQueryPostBean extends ConnectionPayload
 
     public String transactionQuery()
     {
-        String response = sendPostRequest("https://reporting.rpdpymnt.com/api/v3/transaction/list");
+        String response = sendPostRequest(getUrl3());
         if (response!= null)
         {
             return response;
         }
         return "Application is not connect to API !";
     }
-
     public String sendPostRequest(String urlString) {
         try {
             if (!tokenDTO.isTokenValid())
@@ -38,15 +37,19 @@ public class TransactionQueryPostBean extends ConnectionPayload
             }
 
             Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2015-05-01");
-            body.put("toDate", "2016-10-02");
-            ////body.put("Authorization",tokenDTO.getToken());
+            body.put("fromDate", "2015-07-01");
+            body.put("toDate", "2015-10-01");
+            body.put("merchantId","3");
+            body.put("acquirerId","1");
+            body.put("status","APPROVED");
+            body.put("operation","DIRECT");
+            body.put("paymentMethod","CREDITCARD");
+            body.put("filterField","Reference No");
+            body.put("filterValue","1-1568845-56");
+            body.put("page","1");
             //body.put("merchant","53");
             //body.put("acquirer","1");
-            //body.put("status","DECLINED");
-            //body.put("operation","3D");
             //body.put("errorCode","Invalid Transaction");
-
 
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);
@@ -57,9 +60,7 @@ public class TransactionQueryPostBean extends ConnectionPayload
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
             connection.setRequestProperty("Authorization", tokenDTO.getToken());
-            //connection.setRequestProperty("apiKey", "514861735");
-            //connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
-
+            connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
             connection.setDoOutput(true);
 
             try (OutputStream os = connection.getOutputStream())

@@ -5,19 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
-import org.api_resolver.dto.ResponsePayload;
 import org.api_resolver.dto.TokenDTO;
-import org.api_resolver.utils.JWTResolver;
-import org.api_resolver.utils.ResponseResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,15 +20,12 @@ import java.util.Map;
 public class LoginPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
-
     public String login()
     {
         String response = sendPostRequest(getUrl1());
         tokenDTO.setToken(parseToken(response));
-
         return "-- Token : " + tokenDTO.getToken() + "\n -- MerchantId : 53";
     }
-
     public String parseToken(String jsonResponse)
     {
         JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
@@ -62,7 +53,6 @@ public class LoginPostBean extends ConnectionPayload
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
             connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
-
             connection.setDoOutput(true);
 
             try (OutputStream os = connection.getOutputStream())
