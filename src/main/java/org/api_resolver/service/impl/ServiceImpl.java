@@ -35,9 +35,9 @@ public class ServiceImpl implements LoginService, ClientService, TransactionQuer
         return transactionQueryPostBean.transactionQuery();
     }
 
-    public String getTokenInfo()
+    public String transactionReport()
     {
-        return null; // Token expirationDate ve Token bilgisi döndür
+        return transactionReportPostBean.transactionReport();
     }
 
 

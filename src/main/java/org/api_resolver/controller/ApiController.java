@@ -1,6 +1,7 @@
 package org.api_resolver.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.api_resolver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,12 @@ public class ApiController
     public String transactionQuery()
     {
         return transactionQueryService.transactionQuery();
+    }
+
+    @GetMapping(value = "/transactionReport")
+    public String transactionReport()
+    {
+        return transactionReportService.transactionReport();
     }
 
 
