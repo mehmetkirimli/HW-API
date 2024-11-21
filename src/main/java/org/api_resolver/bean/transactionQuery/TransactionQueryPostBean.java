@@ -6,8 +6,7 @@ import org.api_resolver.dto.TokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
-import java.io.OutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -20,68 +19,53 @@ public class TransactionQueryPostBean extends ConnectionPayload
     public String transactionQuery()
     {
         super.disableSSLVerification();
-        sendPostRequest();
+        String response = sendPostRequest(getUrl3());
         return "BU ÇALIŞIRSA OLMUŞTUR :) ";
     }
 
-    public void sendPostRequest()
+    public String sendPostRequest(String urlString)
     {
-        try
-        {
-            // JSON body (örnek parametrelerle)
+        try {
             String jsonInputString = "{"
-                    + "\"fromDate\": \"2015-07-01\","
-                    + "\"toDate\": \"2015-10-01\","
-                    + "\"merchantId\": 3,"
-                    + "\"acquirerId\": 2"
+                    //+ " \"email\": \"" + email
+                    //+ "\", \"password\": \"" + password
                     + "}";
 
-            URL apiUrl = new URL(getUrl3());
-            HttpsURLConnection conn = (HttpsURLConnection) apiUrl.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "Bearer "+tokenDTO.getToken());
-            conn.setDoOutput(true);
+            URL url = new URL(urlString);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + tokenDTO.getToken());
+            connection.setDoOutput(true); // connection open
 
-            // TLS Protokolünü Zorunlu Kılın
-            conn.setSSLSocketFactory((javax.net.ssl.SSLSocketFactory) javax.net.ssl.SSLSocketFactory.getDefault());
-
-            // JSON body'yi gönder
-            try (OutputStream os = conn.getOutputStream())
+            try (OutputStream os = connection.getOutputStream())
             {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                byte[] input = jsonInputString.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            // Yanıtı Okuma
-            int responseCode = conn.getResponseCode();
-            if (responseCode == HttpsURLConnection.HTTP_OK)
-            {
-                // Yanıtı okuyun
-                InputStream is = conn.getInputStream();
-                String response = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-                System.out.println("Başarılı Yanıt: " + response);
-            }
-            else
-            {
-                System.out.println("Hata Kodu: " + responseCode);
-                InputStream errorStream = conn.getErrorStream();
-                if (errorStream != null) {
-                    String errorResponse = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
-                    System.out.println("Hata Yanıtı: " + errorResponse);
-                }
-            }
-            conn.disconnect();
+            // Yanıtı alıyoruz
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
 
-        }
-        catch (Exception e)
-        {
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8")))
+            {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                System.out.println("Response: " + response.toString());
+            }
+            return response.toString();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        return "Error - Not Found API ....";
     }
-
 
 
 
