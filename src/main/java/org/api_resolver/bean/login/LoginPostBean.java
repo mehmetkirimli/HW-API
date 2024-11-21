@@ -34,16 +34,18 @@ public class LoginPostBean extends ConnectionPayload
     public String sendPostRequest(String urlString, String email, String password)
     {
         try {
+            String jsonInputString = "{"
+                    + " \"email\": \"" + email
+                    + "\", \"password\": \"" + password
+                    + "\" }";
+
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            connection.setDoOutput(true); // connection open
 
-            String jsonInputString = "{ \"email\": \"" + email + "\", \"password\": \"" + password + "\" }";
-
-            // Bağlantıyı açıyoruz ve veri gönderiyoruz
-            connection.setDoOutput(true);
             try (OutputStream os = connection.getOutputStream())
             {
                 byte[] input = jsonInputString.getBytes("utf-8");

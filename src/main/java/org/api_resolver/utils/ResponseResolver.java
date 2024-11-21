@@ -15,7 +15,6 @@ public class ResponseResolver {
         String token = jsonObject.get("token").getAsString();
         String status = jsonObject.get("status").getAsString();
 
-        // Durumu kontrol et (isteğe bağlı)
         if (!"APPROVED".equalsIgnoreCase(status))
         {
             throw new RuntimeException("Status is not approved. Status: " + status);

@@ -31,5 +31,11 @@ public class ApiController
         return clientService.getClient();
     }
 
+    @GetMapping(value = "/transactionQuery")
+    public String transactionQuery()
+    {
+        return transactionQueryService.transactionQuery();
+    }
+
 
 }
