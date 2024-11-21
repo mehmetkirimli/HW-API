@@ -25,6 +25,8 @@ public class ApiController
         return loginService.login();
     }
 
+    //TODO diğer istekler için sürekli başta login olmak yerine , login olunmadıysa logine yönlendirebilirim
+
     @GetMapping(value = "/getClient")
     public String getClient()
     {

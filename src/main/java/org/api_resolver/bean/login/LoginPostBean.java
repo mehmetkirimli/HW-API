@@ -1,5 +1,8 @@
 package org.api_resolver.bean.login;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.ResponsePayload;
@@ -9,67 +12,113 @@ import org.api_resolver.utils.ResponseResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import javax.net.ssl.*;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LoginPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
-    private final ResponseResolver responseResolver;
+
     public String login()
     {
-        String response = sendPostRequest(getUrl1(),getEmail(),getPassword());
-        tokenDTO.setToken(responseResolver.parseToken(response));
+        String response = sendPostRequest(getUrl1());
+        tokenDTO.setToken(parseToken(response));
 
         return "-- Token : " + tokenDTO.getToken() + "\n -- MerchantId : 53";
     }
-    public String sendPostRequest(String urlString, String email, String password)
+
+    public String parseToken(String jsonResponse)
+    {
+        JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+        String token = jsonObject.get("token").getAsString();
+        String status = jsonObject.get("status").getAsString();
+        if (!"APPROVED".equalsIgnoreCase(status))
+        {
+            throw new RuntimeException("Status is not approved. Status: " + status);
+        }
+        return token;
+    }
+    public String sendPostRequest(String urlString)
     {
         try {
-            String jsonInputString = "{"
-                    + " \"email\": \"" + email
-                    + "\", \"password\": \"" + password
-                    + "\" }";
+            Map<String, Object> body = new HashMap<>();
+            body.put("email", getEmail());
+            body.put("password", getPassword());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonInputString = objectMapper.writeValueAsString(body);
 
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
-            connection.setDoOutput(true); // connection open
+            connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+
+            connection.setDoOutput(true);
 
             try (OutputStream os = connection.getOutputStream())
             {
-                byte[] input = jsonInputString.getBytes("utf-8");
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
-            // Yanıtı alıyoruz
+            // Yanıt kodunu al
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8")))
+            if (responseCode >= 200 && responseCode < 300)
             {
-                String inputLine;
-                while ((inputLine = in.readLine()) != null)
+                StringBuilder response = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8")))
                 {
-                    response.append(inputLine);
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null)
+                    {
+                        response.append(inputLine);
+                    }
                 }
                 System.out.println("Response: " + response.toString());
+                connection.disconnect();
+                return response.toString();
             }
-            connection.disconnect(); // Bağlantıyı kapat
-            return response.toString();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            else
+            {
+                InputStream errorStream = connection.getErrorStream();
+                if (errorStream != null)
+                {
+                    StringBuilder errorResponse = new StringBuilder();
+                    try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream, "utf-8")))
+                    {
+                        String line;
+                        while ((line = errorReader.readLine()) != null)
+                        {
+                            errorResponse.append(line);
+                        }
+                    }
+                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
+                    return "Hata Detayı: " + errorResponse.toString();
+                }
+                return "Hata Oluştu: " + responseCode;
+            }
         }
-        return "Error - Not Found API ....";
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return "Error - IOException";
+        }
+        catch (RuntimeException e)
+        {
+            System.err.println(e.getMessage());
+            return "Error - " + e.getMessage();
+        }
     }
 }

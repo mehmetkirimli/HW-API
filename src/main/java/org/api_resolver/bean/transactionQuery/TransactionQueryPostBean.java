@@ -22,7 +22,7 @@ public class TransactionQueryPostBean extends ConnectionPayload
 
     public String transactionQuery()
     {
-        String response = sendPostRequest(getUrl3());
+        String response = sendPostRequest("https://reporting.rpdpymnt.com/api/v3/transaction/list");
         if (response!= null)
         {
             return response;
@@ -38,9 +38,14 @@ public class TransactionQueryPostBean extends ConnectionPayload
             }
 
             Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2010-01-01");
-            body.put("toDate", "2015-12-12");
-            //body.put("Authorization",tokenDTO.getToken());
+            body.put("fromDate", "2015-05-01");
+            body.put("toDate", "2016-10-02");
+            ////body.put("Authorization",tokenDTO.getToken());
+            //body.put("merchant","53");
+            //body.put("acquirer","1");
+            //body.put("status","DECLINED");
+            //body.put("operation","3D");
+            //body.put("errorCode","Invalid Transaction");
 
 
             ObjectMapper objectMapper = new ObjectMapper();

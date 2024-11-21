@@ -1,0 +1,73 @@
+  public String sendPostRequest(String urlString, String email, String password)
+    {
+        try {
+            String jsonInputString = "{"
+                    + " \"email\": \"" + email
+                    + "\", \"password\": \"" + password
+                    + "\" }";
+
+            URL url = new URL(urlString);
+            HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setSSLSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+
+            disableSSLVerification();
+
+            connection.setDoOutput(true); // connection open
+
+            try (OutputStream os = connection.getOutputStream())
+            {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            // Yanıtı alıyoruz
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8")))
+            {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                System.out.println("Response: " + response.toString());
+            }
+            connection.disconnect(); // Bağlantıyı kapat
+            return response.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "Error - Not Found API ....";
+    }
+    public void disableSSLVerification()
+    {
+        try {
+            TrustManager[] trustAllCertificates = new TrustManager[]{
+                    new X509TrustManager() {
+                        // SSL sertifikalarını kontrol etmemek için,
+                        // Güvenlik sağlayıcılarını kaldırıyoruz
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCertificates, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            // Hostname doğrulamasını devre dışı bırakıyoruz (isteğe bağlı)
+            HostnameVerifier allHostsValid = (hostname, session) -> true;
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
