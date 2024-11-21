@@ -2,12 +2,11 @@ package org.api_resolver.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.api_resolver.dto.TransactionDTO;
+import org.api_resolver.dto.TransactionReportDTO;
 import org.api_resolver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api-resolver")
@@ -25,25 +24,26 @@ public class ApiController
     {
         return loginService.login();
     }
-
     //TODO diğer istekler için sürekli başta login olmak yerine , login olunmadıysa logine yönlendirebilirim
-
-    @GetMapping(value = "/getClient")
-    public String getClient()
+    @PostMapping(value = "/getClient")
+    public String getClient(@RequestBody TransactionDTO dto)
     {
-        return clientService.getClient();
+        return clientService.getClient(dto.getTransactionId());
     }
-
     @GetMapping(value = "/transactionQuery")
     public String transactionQuery()
     {
         return transactionQueryService.transactionQuery();
     }
-
-    @GetMapping(value = "/transactionReport")
-    public String transactionReport()
+    @PostMapping(value = "/transactionReport")
+    public String transactionReport(@RequestBody TransactionReportDTO dto)
     {
-        return transactionReportService.transactionReport();
+        return transactionReportService.transactionReport(dto);
+    }
+    @PostMapping(value = "/getTransaction")
+    public String getTransaction(@RequestBody TransactionDTO dto) //Note : RequestParam ile de yapılabili
+    {
+        return transactionService.getTransaction(dto.getTransactionId());
     }
 
 

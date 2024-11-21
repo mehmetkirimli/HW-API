@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.TokenDTO;
+import org.api_resolver.dto.TransactionReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,27 +23,29 @@ public class TransactionReportPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
 
-    public String transactionReport()
+    public String transactionReport(TransactionReportDTO dto)
     {
-        String response = sendPostRequest(getUrl2());
+        String response = sendPostRequest(getUrl2(),dto);
         if (response!= null)
         {
             return response;
         }
         return "Application is not connect to API !";
     }
-    public String sendPostRequest(String urlString) {
+    public String sendPostRequest(String urlString,TransactionReportDTO dto) {
         try {
             if (!tokenDTO.isTokenValid())
             {
                 throw new RuntimeException("Token expired or invalid.");
             }
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
             Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2015-07-01");
-            body.put("toDate", "2015-10-01");
-            body.put("merchant","53");
-            body.put("acquirer","1");
+            body.put("fromDate", sdf.format(dto.getFromDate()));
+            body.put("toDate", sdf.format(dto.getToDate()));
+            body.put("merchant",dto.getMerchant().toString());
+            body.put("acquirer",dto.getAcquirer().toString());
 
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);
