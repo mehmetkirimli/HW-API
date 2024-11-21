@@ -32,18 +32,16 @@ public class TransactionQueryPostBean extends ConnectionPayload
 
     public String sendPostRequest(String urlString) {
         try {
-            // Token'in geçerliliğini kontrol et
-            if (!tokenDTO.isTokenValid()) {
+            if (!tokenDTO.isTokenValid())
+            {
                 throw new RuntimeException("Token expired or invalid.");
             }
 
-            // JSON body oluştur
             Map<String, Object> body = new HashMap<>();
             body.put("fromDate", "2010-01-01");
             body.put("toDate", "2015-12-12");
-            body.put("Authorization",tokenDTO.getToken());
-            // Ek filtreler gerekiyorsa buraya ekleyin
-            // body.put("status", "APPROVED");
+            //body.put("Authorization",tokenDTO.getToken());
+
 
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);
@@ -59,8 +57,8 @@ public class TransactionQueryPostBean extends ConnectionPayload
 
             connection.setDoOutput(true);
 
-            // JSON body gönder
-            try (OutputStream os = connection.getOutputStream()) {
+            try (OutputStream os = connection.getOutputStream())
+            {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
@@ -69,26 +67,32 @@ public class TransactionQueryPostBean extends ConnectionPayload
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
-            if (responseCode >= 200 && responseCode < 300) {
-                // Başarılı yanıtı oku
+            if (responseCode >= 200 && responseCode < 300)
+            {
                 StringBuilder response = new StringBuilder();
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8")))
+                {
                     String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
+                    while ((inputLine = in.readLine()) != null)
+                    {
                         response.append(inputLine);
                     }
                 }
                 System.out.println("Response: " + response.toString());
                 connection.disconnect();
                 return response.toString();
-            } else {
-                // Hata yanıtını oku
+            }
+            else
+            {
                 InputStream errorStream = connection.getErrorStream();
-                if (errorStream != null) {
+                if (errorStream != null)
+                {
                     StringBuilder errorResponse = new StringBuilder();
-                    try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream, "utf-8"))) {
+                    try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream, "utf-8")))
+                    {
                         String line;
-                        while ((line = errorReader.readLine()) != null) {
+                        while ((line = errorReader.readLine()) != null)
+                        {
                             errorResponse.append(line);
                         }
                     }
@@ -97,10 +101,14 @@ public class TransactionQueryPostBean extends ConnectionPayload
                 }
                 return "Hata Oluştu: " + responseCode;
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
             return "Error - IOException";
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e)
+        {
             System.err.println(e.getMessage());
             return "Error - " + e.getMessage();
         }
