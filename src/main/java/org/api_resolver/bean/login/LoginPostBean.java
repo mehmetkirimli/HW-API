@@ -24,7 +24,7 @@ public class LoginPostBean extends ConnectionPayload
     {
         String response = sendPostRequest(getUrl1());//NOTE bu parametre değişince test ve canlı sunucuya göre istek değişir.
         tokenDTO.setToken(parseToken(response));
-        return "-- Token : " + tokenDTO.getToken() + "\n -- MerchantId : 53";
+        return "-- Token : \n" + tokenDTO.getToken() ;
     }
     public String parseToken(String jsonResponse)
     {
