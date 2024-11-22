@@ -6,9 +6,7 @@ import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.TokenDTO;
 import org.api_resolver.dto.TransactionQueryDTO;
 import org.api_resolver.mapper.TransactionQueryDTOMapper;
-import org.api_resolver.model.TransactionList;
 import org.api_resolver.utils.FieldUtils;
-import org.api_resolver.utils.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
@@ -17,8 +15,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
