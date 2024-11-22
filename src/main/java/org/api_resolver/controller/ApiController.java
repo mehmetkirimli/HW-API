@@ -2,6 +2,7 @@ package org.api_resolver.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.TransactionDTO;
+import org.api_resolver.dto.TransactionQueryDTO;
 import org.api_resolver.dto.TransactionReportDTO;
 import org.api_resolver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,10 @@ public class ApiController
     {
         return loginService.login();
     }
-    @GetMapping(value = "/transactionQuery")
-    public String transactionQuery()
+    @PostMapping(value = "/transactionQuery")
+    public String transactionQuery(@RequestBody TransactionQueryDTO json)
     {
-        return transactionQueryService.transactionQuery();
+        return transactionQueryService.transactionQuery(json);
     }
     @PostMapping(value = "/getClient")
     public String getClient(@RequestBody TransactionDTO dto)
@@ -34,7 +35,7 @@ public class ApiController
         return clientService.getClient(dto.getTransactionId());
     }
     @PostMapping(value = "/getTransaction")
-    public String getTransaction(@RequestBody TransactionDTO dto) //Note : RequestParam ile de yapılabili
+    public String getTransaction(@RequestBody TransactionDTO dto) //Note : RequestParam ile de yapılabilir
     {
         return transactionService.getTransaction(dto.getTransactionId());
     }

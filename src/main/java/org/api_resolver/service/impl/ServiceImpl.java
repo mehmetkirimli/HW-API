@@ -6,6 +6,7 @@ import org.api_resolver.bean.login.LoginPostBean;
 import org.api_resolver.bean.transaction.TransactionGetBean;
 import org.api_resolver.bean.transactionQuery.TransactionQueryPostBean;
 import org.api_resolver.bean.transactionReport.TransactionReportPostBean;
+import org.api_resolver.dto.TransactionQueryDTO;
 import org.api_resolver.dto.TransactionReportDTO;
 import org.api_resolver.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ public class ServiceImpl implements LoginService, ClientService, TransactionQuer
     {
         return clientGetBean.getClient(transactionId);
     }
-    public String transactionQuery()
+    public String transactionQuery(TransactionQueryDTO json)
     {
-        return transactionQueryPostBean.transactionQuery();
+        return transactionQueryPostBean.transactionQuery(json);
     }
     public String transactionReport(TransactionReportDTO dto)
     {
