@@ -4,27 +4,29 @@ import java.lang.reflect.Field;
 
 public class FieldUtils {
 
-    public static long countNonNullFields(Object dto)
+    public static int countNonNullFields(Object dto)
     {
-        long nonNullCount = 0;
+        int nonNullCount = 0;
 
-        Field[] fields = dto.getClass().getDeclaredFields(); // Note Reflection İle Runtime'da Class yapısına göre Obje Oluşturulup
+        Field[] fields = dto.getClass().getDeclaredFields();
+        //Note : Reflection , method ve field'a runtime esnasında erişebiliyo.
 
-        for (Field field : fields) {
+        for (Field field : fields)
+        {
             field.setAccessible(true);
-
-            try {
+            try
+            {
                 Object value = field.get(dto);
-
                 if (value != null)
                 {
                     nonNullCount++;
                 }
-            } catch (IllegalAccessException e) {
+            }
+            catch (IllegalAccessException e)
+            {
                 e.printStackTrace();
             }
         }
-
         return nonNullCount;
     }
 }

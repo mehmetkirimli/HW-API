@@ -1,8 +1,9 @@
 package org.api_resolver.mapper;
 
-import org.api_resolver.dto.TransactionDTO;
 import org.api_resolver.dto.TransactionQueryDTO;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
 
 @Component
 public class TransactionQueryDTOMapper

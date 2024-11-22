@@ -1,12 +1,9 @@
-package org.api_resolver.bean.transactionQuery;
+package org.api_resolver.controller.bean.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.TokenDTO;
-import org.api_resolver.dto.TransactionQueryDTO;
-import org.api_resolver.mapper.TransactionQueryDTOMapper;
-import org.api_resolver.utils.FieldUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
@@ -19,31 +16,33 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TransactionQueryPostBean extends ConnectionPayload
+public class ClientGetBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
-    private final TransactionQueryDTOMapper mapper;
 
-    public String transactionQuery(TransactionQueryDTO json)
+    public String getClient(String transactionId)
     {
-        String response = sendPostRequest(getUrl3(), json);
+        String response = sendPostRequest(getUrl5(),transactionId);
         if (response!= null)
         {
             return response;
         }
         return "Application is not connect to API !";
     }
-    public String sendPostRequest(String urlString,TransactionQueryDTO json) {
+    public String sendPostRequest(String urlString,String transactionId)
+    {
         try {
             if (!tokenDTO.isTokenValid())
             {
                 throw new RuntimeException("Token expired or invalid.");
             }
 
-            TransactionQueryDTO mappedData = mapTransactionQuery(json);
+            Map<String, Object> body = new HashMap<>();
+            body.put("transactionId", transactionId);
+
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonInputString = objectMapper.writeValueAsString(mappedData);
+            String jsonInputString = objectMapper.writeValueAsString(body);
 
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -93,10 +92,10 @@ public class TransactionQueryPostBean extends ConnectionPayload
                             errorResponse.append(line);
                         }
                     }
-                    System.out.println("Error Response : " + errorResponse.toString());
-                    return "Error Detail : " + errorResponse.toString();
+                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
+                    return "Hata Detayı: " + errorResponse.toString();
                 }
-                return "Error : " + responseCode;
+                return "Hata Oluştu: " + responseCode;
             }
         }
         catch (IOException e)
@@ -110,46 +109,4 @@ public class TransactionQueryPostBean extends ConnectionPayload
             return "Error - " + e.getMessage();
         }
     }
-
-    private TransactionQueryDTO mapTransactionQuery(TransactionQueryDTO json)
-    {
-        // Parametre sayısına göre doğru mapper metodunu çağır
-        long paramCount = FieldUtils.countNonNullFields(json);
-
-        switch ((int) paramCount) {
-            case 0:
-                return mapper.mapNoData(json);
-            case 2:
-                return mapper.mapTwoData(json);
-            case 3:
-                return mapper.mapThreeData(json);
-            case 4:
-                return mapper.mapFourData(json);
-            case 10:
-                return mapper.mapTenData(json);
-            default:
-                throw new IllegalArgumentException("Unsupported request data format");
-        }
-    }
 }
-
-
-/*
-
-   Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2015-07-01");
-            body.put("toDate", "2015-10-01");
-            body.put("merchantId","3");
-            body.put("acquirerId","1");
-            body.put("status","APPROVED");
-            body.put("operation","DIRECT");
-            body.put("paymentMethod","CREDITCARD");
-            body.put("filterField","Reference No");
-            body.put("filterValue","1-1568845-56");
-            body.put("page","1");
-            //body.put("merchant","53");
-            //body.put("acquirer","1");
-            //body.put("errorCode","Invalid Transaction");
-
-
- */
