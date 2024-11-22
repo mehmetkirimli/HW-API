@@ -1,51 +1,45 @@
-package org.api_resolver.controller.bean.transactionQuery.transactionReport;
+package org.api_resolver.bean.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.TokenDTO;
-import org.api_resolver.dto.TransactionReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TransactionReportPostBean extends ConnectionPayload
+public class ClientGetBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
 
-    public String transactionReport(TransactionReportDTO dto)
+    public String getClient(String transactionId)
     {
-        String response = sendPostRequest(getUrl2(),dto);
+        String response = sendPostRequest(getUrl5(),transactionId);
         if (response!= null)
         {
             return response;
         }
         return "Application is not connect to API !";
     }
-    public String sendPostRequest(String urlString,TransactionReportDTO dto) {
+    public String sendPostRequest(String urlString,String transactionId)
+    {
         try {
             if (!tokenDTO.isTokenValid())
             {
                 throw new RuntimeException("Token expired or invalid.");
             }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
             Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", sdf.format(dto.getFromDate()));
-            body.put("toDate", sdf.format(dto.getToDate()));
-            body.put("merchant",dto.getMerchant().toString());
-            body.put("acquirer",dto.getAcquirer().toString());
+            body.put("transactionId", transactionId);
+
 
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);

@@ -4,3 +4,4 @@ dependencies :
     - lombok
     - junit
     - gson
+    - jackson

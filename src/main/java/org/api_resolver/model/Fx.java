@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class Fx
 {
-    private Merchant fxMerchant;
+    private Merchant merchant;
 }

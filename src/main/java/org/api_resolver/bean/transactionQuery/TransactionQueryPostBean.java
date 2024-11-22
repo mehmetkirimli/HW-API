@@ -1,9 +1,14 @@
-package org.api_resolver.controller.bean.client;
+package org.api_resolver.bean.transactionQuery;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
 import org.api_resolver.dto.TokenDTO;
+import org.api_resolver.dto.TransactionQueryDTO;
+import org.api_resolver.mapper.TransactionQueryDTOMapper;
+import org.api_resolver.model.TransactionList;
+import org.api_resolver.utils.FieldUtils;
+import org.api_resolver.utils.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.net.ssl.HttpsURLConnection;
@@ -11,38 +16,39 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ClientGetBean extends ConnectionPayload
+public class TransactionQueryPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
+    private final TransactionQueryDTOMapper mapper;
 
-    public String getClient(String transactionId)
+    public String transactionQuery(TransactionQueryDTO json)
     {
-        String response = sendPostRequest(getUrl5(),transactionId);
+        String response = sendPostRequest(getUrl3(), json);
         if (response!= null)
         {
             return response;
         }
         return "Application is not connect to API !";
     }
-    public String sendPostRequest(String urlString,String transactionId)
-    {
+    public String sendPostRequest(String urlString,TransactionQueryDTO json) {
         try {
             if (!tokenDTO.isTokenValid())
             {
                 throw new RuntimeException("Token expired or invalid.");
             }
 
-            Map<String, Object> body = new HashMap<>();
-            body.put("transactionId", transactionId);
-
+            TransactionQueryDTO mappedData = mapTransactionQuery(json);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonInputString = objectMapper.writeValueAsString(body);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            objectMapper.setDateFormat(sdf);
+            String jsonInputString = objectMapper.writeValueAsString(mappedData);
 
             URL url = new URL(urlString);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -92,10 +98,10 @@ public class ClientGetBean extends ConnectionPayload
                             errorResponse.append(line);
                         }
                     }
-                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
-                    return "Hata Detayı: " + errorResponse.toString();
+                    System.out.println("Error Response : " + errorResponse.toString());
+                    return "Error Detail : " + errorResponse.toString();
                 }
-                return "Hata Oluştu: " + responseCode;
+                return "Error : " + responseCode;
             }
         }
         catch (IOException e)
@@ -109,4 +115,61 @@ public class ClientGetBean extends ConnectionPayload
             return "Error - " + e.getMessage();
         }
     }
+
+    private TransactionQueryDTO mapTransactionQuery(TransactionQueryDTO json)
+    {
+        int paramCount = FieldUtils.countNonNullFields(json);
+
+        switch ((int) paramCount) {
+            case 0:
+                return mapper.mapNoData(json);
+            case 2:
+                return mapper.mapTwoData(json);
+            case 3:
+                return mapper.mapThreeData(json);
+            case 4:
+                return mapper.mapFourData(json);
+            case 10:
+                return mapper.mapTenData(json);
+            default:
+                throw new IllegalArgumentException("Unsupported request data format");
+        }
+    }
 }
+
+
+/*
+            Map<String, Object> body = new HashMap<>();
+            body.put("fromDate", "2015-07-01");
+            body.put("toDate", "2015-10-01");
+            body.put("merchantId","3");
+            body.put("acquirerId","1");
+            body.put("status","APPROVED");
+            body.put("operation","DIRECT");
+            body.put("paymentMethod","CREDITCARD");
+            body.put("filterField","Reference No");
+            body.put("filterValue","1-1568845-56");
+            body.put("page","1");
+            //body.put("merchant","53");
+            //body.put("acquirer","1");
+            //body.put("errorCode","Invalid Transaction");
+
+            ***statik olarak test datası -> JsonBody
+
+
+
+            JsonParser parser = new JsonParser();
+                TransactionList transactionList = parser.parseJsonString(response.toString());
+
+                // Note : Stream kullanarak veriyi işliyoruz ve yazdırıyoruz
+                transactionList.getData().stream()
+                        .map(data -> String.format("Transaction ID: %s\nMerchant Name: %s\nTransaction Status: %s\nConverted Amount: %s\nCustomer Mail: %s",
+                                data.getTransaction().getTransactionId(),
+                                data.getMerchant().getName(),
+                                data.getTransaction().getStatus(),
+                                data.getFx().getMerchant().getConvertedAmount(),
+                                data.getAcquirer().getCode()
+                        ))
+                        .forEach(System.out::println);
+ */
+

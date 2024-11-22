@@ -1,4 +1,4 @@
-package org.api_resolver.controller.bean.transaction;
+package org.api_resolver.bean.transaction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

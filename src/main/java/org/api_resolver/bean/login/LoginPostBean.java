@@ -1,4 +1,4 @@
-package org.api_resolver.controller.bean.login;
+package org.api_resolver.bean.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;

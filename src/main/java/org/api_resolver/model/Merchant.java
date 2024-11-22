@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class Merchant
 {
+    private String name;
     private double originalAmount;
     private String originalCurrency;
     private double convertedAmount;

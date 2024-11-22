@@ -1,11 +1,11 @@
 package org.api_resolver.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.api_resolver.controller.bean.client.ClientGetBean;
-import org.api_resolver.controller.bean.login.LoginPostBean;
-import org.api_resolver.controller.bean.transaction.TransactionGetBean;
-import org.api_resolver.controller.bean.transactionQuery.TransactionQueryPostBean;
-import org.api_resolver.controller.bean.transactionQuery.transactionReport.TransactionReportPostBean;
+import org.api_resolver.bean.client.ClientGetBean;
+import org.api_resolver.bean.login.LoginPostBean;
+import org.api_resolver.bean.transaction.TransactionGetBean;
+import org.api_resolver.bean.transactionQuery.TransactionQueryPostBean;
+import org.api_resolver.bean.transactionReport.TransactionReportPostBean;
 import org.api_resolver.dto.TransactionQueryDTO;
 import org.api_resolver.dto.TransactionReportDTO;
 import org.api_resolver.service.*;
