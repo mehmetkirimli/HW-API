@@ -29,10 +29,10 @@ public class ApiController
     {
         return transactionQueryService.transactionQuery(json);
     }
-    @PostMapping(value = "/getClient")
-    public String getClient(@RequestBody TransactionDTO dto)
+    @GetMapping(value = "/getClient")
+    public String getClient(@RequestParam ("transactionId") String  transactionId)
     {
-        return clientService.getClient(dto.getTransactionId());
+        return clientService.getClient(transactionId);
     }
     @PostMapping(value = "/getTransaction")
     public String getTransaction(@RequestBody TransactionDTO dto) //Note : RequestParam ile de yapılabilir
