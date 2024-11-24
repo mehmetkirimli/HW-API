@@ -6,6 +6,7 @@ import org.api_resolver.bean.login.LoginPostBean;
 import org.api_resolver.bean.transaction.TransactionGetBean;
 import org.api_resolver.bean.transactionQuery.TransactionQueryPostBean;
 import org.api_resolver.bean.transactionReport.TransactionReportPostBean;
+import org.api_resolver.dto.LoginDTO;
 import org.api_resolver.dto.TransactionQueryDTO;
 import org.api_resolver.dto.TransactionReportDTO;
 import org.api_resolver.service.*;
@@ -22,9 +23,9 @@ public class ServiceImpl implements LoginService, ClientService, TransactionQuer
     private final TransactionReportPostBean transactionReportPostBean;
     private final TransactionGetBean transactionGetBean;
 
-    public String login()
+    public String login(LoginDTO dto)
     {
-        return loginPostBean.login();
+        return loginPostBean.login(dto);
     }
     public String getClient(String transactionId)
     {

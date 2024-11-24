@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.api_resolver.dto.ConnectionPayload;
+import org.api_resolver.dto.LoginDTO;
 import org.api_resolver.dto.TokenDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,9 +21,9 @@ import java.util.Map;
 public class LoginPostBean extends ConnectionPayload
 {
     private final TokenDTO tokenDTO;
-    public String login()
+    public String login(LoginDTO dto)
     {
-        String response = sendPostRequest(getUrl1());//NOTE bu parametre değişince test ve canlı sunucuya göre istek değişir.
+        String response = sendPostRequest(getUrl1(),dto);//NOTE URL parametresi değişince test ve canlı sunucuya göre istek değişir.
         tokenDTO.setToken(parseToken(response));
         return "-- Token : \n" + tokenDTO.getToken() ;
     }
@@ -37,12 +38,12 @@ public class LoginPostBean extends ConnectionPayload
         }
         return token;
     }
-    public String sendPostRequest(String urlString)
+    public String sendPostRequest(String urlString,LoginDTO dto)
     {
         try {
             Map<String, Object> body = new HashMap<>();
-            body.put("email", getEmail());
-            body.put("password", getPassword());
+            body.put("email", dto.getEmail());
+            body.put("password", dto.getPassword());
 
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);

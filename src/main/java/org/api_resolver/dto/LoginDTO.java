@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDTO
+public class LoginDTO
 {
-    private String transactionId;
+    private String email;
+    private String password;
 }
