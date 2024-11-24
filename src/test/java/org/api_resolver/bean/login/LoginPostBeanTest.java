@@ -86,8 +86,6 @@ class LoginPostBeanTest {
         assertTrue(result.contains("Invalid credentials"));
     }
 
-
-
     @Test
     void testParseTokenSuccess()
     {
@@ -110,8 +108,6 @@ class LoginPostBeanTest {
 
         assertTrue(response.contains("REJECTED"));
     }
-
-
 
     @Test
     void testSendPostRequestSuccess() {
