@@ -65,7 +65,6 @@ public class TransactionReportPostBean extends ConnectionPayload
                 os.write(input, 0, input.length);
             }
 
-            // Yanıt kodunu al
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
@@ -98,10 +97,10 @@ public class TransactionReportPostBean extends ConnectionPayload
                             errorResponse.append(line);
                         }
                     }
-                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
-                    return "Hata Detayı: " + errorResponse.toString();
+                    System.out.println("Error Response : " + errorResponse.toString());
+                    return "Error Response Detail : " + errorResponse.toString();
                 }
-                return "Hata Oluştu: " + responseCode;
+                return "Error Code : " + responseCode;
             }
         }
         catch (IOException e)

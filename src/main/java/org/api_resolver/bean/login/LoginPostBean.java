@@ -23,7 +23,8 @@ public class LoginPostBean extends ConnectionPayload
     private final TokenDTO tokenDTO;
     public String login(LoginDTO dto)
     {
-        String response = sendPostRequest(getUrl1(),dto);//NOTE URL parametresi değişince test ve canlı sunucuya göre istek değişir.
+        //NOTE URL parametresi değişince test ve canlı sunucuya göre istek değişir.
+        String response = sendPostRequest(getUrl1(),dto);
         tokenDTO.setToken(parseToken(response));
         return "-- Token : \n" + tokenDTO.getToken() ;
     }
@@ -62,7 +63,6 @@ public class LoginPostBean extends ConnectionPayload
                 os.write(input, 0, input.length);
             }
 
-            // Yanıt kodunu al
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
@@ -95,10 +95,10 @@ public class LoginPostBean extends ConnectionPayload
                             errorResponse.append(line);
                         }
                     }
-                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
-                    return "Hata Detayı: " + errorResponse.toString();
+                    System.out.println("Response : " + errorResponse.toString());
+                    return "Response Detail : " + errorResponse.toString();
                 }
-                return "Hata Oluştu: " + responseCode;
+                return "Response Error Code : " + responseCode;
             }
         }
         catch (IOException e)

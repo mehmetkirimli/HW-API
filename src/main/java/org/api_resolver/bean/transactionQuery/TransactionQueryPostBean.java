@@ -61,7 +61,6 @@ public class TransactionQueryPostBean extends ConnectionPayload
                 os.write(input, 0, input.length);
             }
 
-            // Yanıt kodunu al
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
@@ -134,38 +133,4 @@ public class TransactionQueryPostBean extends ConnectionPayload
 }
 
 
-/*
-            Map<String, Object> body = new HashMap<>();
-            body.put("fromDate", "2015-07-01");
-            body.put("toDate", "2015-10-01");
-            body.put("merchantId","3");
-            body.put("acquirerId","1");
-            body.put("status","APPROVED");
-            body.put("operation","DIRECT");
-            body.put("paymentMethod","CREDITCARD");
-            body.put("filterField","Reference No");
-            body.put("filterValue","1-1568845-56");
-            body.put("page","1");
-            //body.put("merchant","53");
-            //body.put("acquirer","1");
-            //body.put("errorCode","Invalid Transaction");
-
-            ***statik olarak test datası -> JsonBody
-
-
-
-            JsonParser parser = new JsonParser();
-                TransactionList transactionList = parser.parseJsonString(response.toString());
-
-                // Note : Stream kullanarak veriyi işliyoruz ve yazdırıyoruz
-                transactionList.getData().stream()
-                        .map(data -> String.format("Transaction ID: %s\nMerchant Name: %s\nTransaction Status: %s\nConverted Amount: %s\nCustomer Mail: %s",
-                                data.getTransaction().getTransactionId(),
-                                data.getMerchant().getName(),
-                                data.getTransaction().getStatus(),
-                                data.getFx().getMerchant().getConvertedAmount(),
-                                data.getAcquirer().getCode()
-                        ))
-                        .forEach(System.out::println);
- */
 

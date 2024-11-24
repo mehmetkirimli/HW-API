@@ -40,7 +40,6 @@ public class ClientGetBean extends ConnectionPayload
             Map<String, Object> body = new HashMap<>();
             body.put("transactionId", transactionId);
 
-
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonInputString = objectMapper.writeValueAsString(body);
 
@@ -59,7 +58,6 @@ public class ClientGetBean extends ConnectionPayload
                 os.write(input, 0, input.length);
             }
 
-            // Yanıt kodunu al
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 
@@ -92,10 +90,10 @@ public class ClientGetBean extends ConnectionPayload
                             errorResponse.append(line);
                         }
                     }
-                    System.out.println("Hata Yanıtı: " + errorResponse.toString());
-                    return "Hata Detayı: " + errorResponse.toString();
+                    System.out.println("Response : " + errorResponse.toString());
+                    return "Response Detail: " + errorResponse.toString();
                 }
-                return "Hata Oluştu: " + responseCode;
+                return "Error Response Code : " + responseCode;
             }
         }
         catch (IOException e)

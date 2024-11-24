@@ -39,7 +39,8 @@ class ClientGetBeanTest
     }
 
     @Test
-    void testGetClientWithValidToken() {
+    void testGetClientWithValidToken()
+    {
         // Geçerli token durumu
         when(tokenDTO.isTokenValid()).thenReturn(true);
         when(tokenDTO.getToken()).thenReturn("Token12345");
